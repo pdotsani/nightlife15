@@ -1,0 +1,38 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search city..." ng-model="city">
+        <span class="input-group-btn">
+          <button class="btn btn-default" ng-click="searchBars()">Search</button>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="bar in bars">
+          <a ng-click="open($index)">{{bar._id}}</a>
+          <span class="badge">{{bar.going}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script type="text/ng-template" id="barModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">{{bar._id}}</h3> 
+  </div>
+  <div class="modal-body">
+    <p>{{bar.location}}</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="going()">Going</button>
+    <button class="btn btn-warning" ng-click="notGoing()">Not Going</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+  </div>
+</script>
