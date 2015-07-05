@@ -47,8 +47,9 @@ angular.module('nightlife15App')
     $scope.$on('not-going', function(event,args){
       console.log(args._id);
       $scope.bars.forEach(function(bar) {
-        if(bar._id === args._id && bar._id > 0) {
+        if(bar._id === args._id && bar.going > 0) {
           bar.going--;
+          console.log(bar.going);
           $http.put('/api/citys/'+$scope.city+"/"+args._id, {going: bar.going})
             .success(function(data) {
               console.log(data);
