@@ -1,16 +1,17 @@
 'use strict';
 
 angular.module('nightlife15App')
-  .controller('MainCtrl', function ($scope, $http, googleSvc, $modal) {
+  .controller('MainCtrl', function ($scope, $http, googleSvc, $modal, Auth) {
     $scope.city;
     $scope.bars;
+    $scope.isLoggedIn = Auth.isLoggedIn;
 
     $scope.searchBars = function() {
       console.log($scope.city);
       googleSvc.findCity($scope.city);
       $scope.bars = googleSvc.returnBars();
       console.log($scope.bars);
-      if($scope.bars = []) {
+      if($scope.bars === []) {
         googleSvc.getBars($scope.city);
         $scope.bars = googleSvc.returnBars();
         console.log($scope.bars);
@@ -31,25 +32,38 @@ angular.module('nightlife15App')
     };
 
     $scope.$on('going', function(event,args){
-      console.log(args);
+      console.log(args._id);
       $scope.bars.forEach(function(bar) {
-        if(bar._id === args._id) bar.going++;
-      })
-    })
+        if(bar._id === args._id) {
+          bar.going++;
+          $http.put('/api/citys/'+$scope.city+"/"+args._id, {going: bar.going})
+            .success(function(data) {
+              console.log(data);
+            });
+        };
+      });
+    });
 
     $scope.$on('not-going', function(event,args){
-      console.log(args);
+      console.log(args._id);
       $scope.bars.forEach(function(bar) {
-        if(bar._id === args._id && bar._id > 0) bar.going--;
-      })
-    })
+        if(bar._id === args._id && bar._id > 0) {
+          bar.going--;
+          $http.put('/api/citys/'+$scope.city+"/"+args._id, {going: bar.going})
+            .success(function(data) {
+              console.log(data);
+            });
+        };
+      });
+    });
 
   })
 
-  .controller('ModalInstanceCtrl', function ($rootScope, $scope, $modalInstance, item) {
+  .controller('ModalInstanceCtrl', function ($rootScope, $scope, $modalInstance, item, Auth) {
 
     $scope.bar = item;
-    console.log($scope.bar);
+    $scope.isLoggedIn = Auth.isLoggedIn;
+    
     $scope.going = function () {
       $rootScope.$broadcast('going', $scope.bar);
       $modalInstance.close($scope.selected);

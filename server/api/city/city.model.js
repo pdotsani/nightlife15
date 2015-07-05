@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var barSchema = new Schema({
+var BarSchema = new Schema({
 	_id: String,
 	going: Number,
 	location: String
@@ -11,8 +11,8 @@ var barSchema = new Schema({
 
 var CitySchema = new Schema({
   _id: String,
-  bars: [barSchema]
+  bars: [BarSchema]
 });
 
-module.exports = mongoose.model('Bar', barSchema);
-module.exports = mongoose.model('City', CitySchema);
+exports.Bar = mongoose.model('Bar', BarSchema);
+exports.City = mongoose.model('City', CitySchema);

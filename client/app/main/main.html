@@ -29,10 +29,12 @@
   </div>
   <div class="modal-body">
     <p>{{bar.location}}</p>
+    <div class="alert alert-warning" ng-hide="isLoggedIn()"><a href="/login" ng-click="cancel()">Login</a> or <a href="/signup" ng-click="cancel()">sign up</a> to tell friends you are going here tonight.</div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="going()">Going</button>
-    <button class="btn btn-warning" ng-click="notGoing()">Not Going</button>
+    <button class="btn btn-primary" ng-show="isLoggedIn()" ng-click="going()">Going</button>
+    <button class="btn btn-warning" ng-show="isLoggedIn()" ng-click="notGoing()">Not Going</button>
+    <button class="btn btn-warning" ng-show="isLoggedIn()" ng-click="getCity()">Get City</button>
     <button class="btn btn-default" ng-click="cancel()">Cancel</button>
   </div>
 </script>

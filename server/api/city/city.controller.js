@@ -1,7 +1,9 @@
 'use strict';
 
 var _ = require('lodash');
-var City = require('./city.model');
+var models = require('./city.model'),
+    City = models.City,
+    Bar = models.Bar;
 
 // Get list of citys
 exports.index = function(req, res) {
@@ -43,22 +45,26 @@ exports.update = function(req, res) {
 };
 
 exports.updateBar = function(req,res) {
-  City.findById(req.params.id, function(err, city) {
+  var cityId = req.params.id;
+  var barId = req.params.barId.replace('%20', ' ');
+  City.findById(cityId, function(err, city) {
     if (err) { return handleError(res, err); }
     if(!city) { return res.send(404); }
-    Bar.findById(req.params.barId, function(err, bar) {
-      var updated = _merge(bar, req.body);
-      updated.save(function (err) {
-        if (err) { return handleError(res, err); }
-        return res.json(200, bar);
-      });
+    city.bars.forEach(function(bar){
+      if(bar._id === barId) {
+        var updated = _.merge(bar, req.body);
+        city.save(function (err) {
+          if (err) { return handleError(res, err); }
+          return res.json(200, city);
+        });
+      }
     })
   });
 };
 
 // Deletes a city from the DB.
 exports.destroy = function(req, res) {
-  City.findById(req.params.id, function (err, city) {
+  City.findById(city, function (err, city) {
     if(err) { return handleError(res, err); }
     if(!city) { return res.send(404); }
     city.remove(function(err) {
