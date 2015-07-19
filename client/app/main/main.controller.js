@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('nightlife15App')
-  .controller('MainCtrl', function ($scope, $http, googleSvc, $modal, Auth) {
+  .controller('MainCtrl', function ($rootScope, $scope, $http, googleSvc, $modal, Auth) {
     $scope.city;
     $scope.bars;
     $scope.isLoggedIn = Auth.isLoggedIn;
@@ -11,11 +11,6 @@ angular.module('nightlife15App')
       googleSvc.findCity($scope.city);
       $scope.bars = googleSvc.returnBars();
       console.log($scope.bars);
-      if($scope.bars === []) {
-        googleSvc.getBars($scope.city);
-        $scope.bars = googleSvc.returnBars();
-        console.log($scope.bars);
-      }
     };
 
     $scope.open = function (index) {
@@ -30,6 +25,12 @@ angular.module('nightlife15App')
         }
       });
     };
+
+    $scope.$on('get-bars', function(event) {
+      googleSvc.getBars($scope.city);
+      $scope.bars = googleSvc.returnBars();
+      console.log($scope.bars);
+    })
 
     $scope.$on('going', function(event,args){
       console.log(args._id);
